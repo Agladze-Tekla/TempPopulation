@@ -141,6 +141,7 @@ final class PopulationViewController: UIViewController{
     private func setupSearchTableView() {
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.register(CountryTableViewCell.self, forCellReuseIdentifier: "Country")
     }
     
     private func setupViewModelDelegate() {
@@ -187,7 +188,9 @@ extension PopulationViewController: PopulationViewModelDelegate {
 extension PopulationViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         suggestions = suggestions.filter { $0.lowercased().contains(searchText.lowercased()) }
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     //TODO: - Fix the searchBarTextDidEndEditing function, it does not work.
@@ -202,9 +205,13 @@ extension PopulationViewController: UISearchBarDelegate {
 // MARK: - UITableViewDataSource Extension
 extension PopulationViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-                cell.textLabel?.text = suggestions[indexPath.row]
-                return cell
+        //TODO: - Fix TableViewCell
+        //let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Country", for: indexPath) as? CountryTableViewCell else {
+            fatalError("Could not dequeue NewsCell") }
+        //cell.textLabel?.text = suggestions[indexPath.row]
+        cell.configure()//suggestions[indexPath.row])
+            return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
