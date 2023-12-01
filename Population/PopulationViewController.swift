@@ -68,7 +68,13 @@ final class PopulationViewController: UIViewController{
         return label
     }()
     
+    private let searchBar = UISearchBar()
+    
+    private let tableView = UITableView()
+
     private let viewModel = PopulationViewModel()
+    
+    private var suggestions: [String] = []
     
     //MARK: - ViewLifeCycle()
     override func viewDidLoad() {
@@ -81,6 +87,8 @@ final class PopulationViewController: UIViewController{
     //MARK: - Private Methods
     private func setupView() {
         setupBackground()
+        setupSearchController()
+        setupSearchTableView()
         addSubviews()
         setupConstraints()
     }
@@ -90,6 +98,7 @@ final class PopulationViewController: UIViewController{
     }
     
     private func addSubviews() {
+        view.addSubview(tableView)
         view.addSubview(mainStackView)
         mainStackView.addArrangedSubview(todayStackView)
         mainStackView.addArrangedSubview(tomorrowStackView)
@@ -104,15 +113,49 @@ final class PopulationViewController: UIViewController{
             mainStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             mainStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    tableView.topAnchor.constraint(equalTo: view.topAnchor),
+                    tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                    tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                ])
+    }
+    
+    private func setupSearchController() {
+        searchBar.delegate = self
+        searchBar.placeholder = "Search Country"
+        navigationItem.titleView = searchBar
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelSearch))
+    }
+    
+    private func setupSearchTableView() {
+        tableView.dataSource = self
     }
     
     private func setupViewModelDelegate() {
         viewModel.delegate = self
     }
+    
+    // MARK: - Actions
+        @objc private func cancelSearch() {
+            if let searchBar = navigationItem.titleView as? UISearchBar {
+                searchBar.text = ""
+                searchBar.resignFirstResponder()
+            }
+            suggestions.removeAll()
+            tableView.reloadData()
+        }
 }
 
 // MARK: - Exstensions
 extension PopulationViewController: PopulationViewModelDelegate {
+    func suggestionFetched(_ countries: [String]) {
+        suggestions = countries
+    }
+    
     func populationFetched(_ population: [TotalPopulation]) {
         DispatchQueue.main.async {
             //self.populationTodayNumberLabel.text =
@@ -120,9 +163,29 @@ extension PopulationViewController: PopulationViewModelDelegate {
         }
     }
     
-    func showError(_error: Error) {
+    func showError(_ error: Error) {
         print("Error")
     }
+}
+
+// MARK: - UISearchBarDelegate Extension
+extension PopulationViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        suggestions = suggestions.filter { $0.lowercased().contains(searchText.lowercased()) }
+        tableView.reloadData()
+    }
+}
+
+// MARK: - UITableViewDataSource Extension
+
+extension PopulationViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+                cell.textLabel?.text = suggestions[indexPath.row]
+                return cell
+    }
     
-    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return suggestions.count
+    }
 }

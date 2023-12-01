@@ -10,7 +10,8 @@ import GenericNetworkLayer
 
 protocol PopulationViewModelDelegate: AnyObject {
     func populationFetched(_ population: [TotalPopulation])
-    func showError(_error: Error)
+    func suggestionFetched(_ countries: [String])
+    func showError(_ error: Error)
 }
 
 final class PopulationViewModel {
@@ -34,4 +35,21 @@ final class PopulationViewModel {
             }
         }
     }
+    
+    func fetchSuggestions() {
+        guard let url = URL(string: "https://d6wn6bmjj722w.population.io:443/1.0/countries") else { return }
+        
+        NetworkManager().request(with: url) { [weak self] (result: Result<CountryModel, Error>) in
+            switch result {
+            case .success(let response):
+                self?.delegate?.suggestionFetched(response.countries)
+            case .failure(let failure):
+                print(failure.localizedDescription)
+                break
+            }
+        }
+    }
+    
 }
+
+ 
