@@ -34,7 +34,6 @@ final class PopulationViewController: UIViewController{
     
     private let populationTodayLabel: UILabel = {
         let label = UILabel()
-        //label.text = "Population Today:"
         label.numberOfLines = 3
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 24)
@@ -44,7 +43,6 @@ final class PopulationViewController: UIViewController{
     
     private let populationTomorrowLabel: UILabel = {
         let label = UILabel()
-        //label.text = "Population Tomorrow:"
         label.numberOfLines = 3
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 24)
@@ -105,6 +103,8 @@ final class PopulationViewController: UIViewController{
     private var todayPopulation = ""
     
     private var tomorrowPopulation = ""
+    
+    private var populationNumber = ""
     
     //MARK: - ViewLifeCycle()
     override func viewDidLoad() {
@@ -185,10 +185,18 @@ final class PopulationViewController: UIViewController{
     
     private func fetchTodayInfo() {
         viewModel.viewDidLoad(countryName: searchCountry, date: today)
+        todayDateLabel.text = "Date: \(today)"
+        populationTodayNumberLabel.text = "Population: \(populationNumber)"
+        print(populationNumber)
+        populationTodayLabel.text = "Population Today in \(searchCountry): "
     }
     
     private func fetchTomorrowInfo() {
         viewModel.viewDidLoad(countryName: searchCountry, date: tomorrow)
+        tomorrowDateLabel.text = "Date: \(tomorrow)"
+        populationTomorrowNumberLabel.text = "Population: \(populationNumber)"
+        print(populationNumber)
+        populationTomorrowLabel.text = "Population Tomorrow in \(searchCountry)"
     }
     
     // MARK: - Actions
@@ -212,13 +220,17 @@ extension PopulationViewController: PopulationViewModelDelegate {
     func populationFetched(_ population: TotalPopulation) {
         DispatchQueue.main.async {
             //TODO: - Fix label information.
+            /*
             self.todayDateLabel.text = "Date: \(self.today)"
             self.tomorrowDateLabel.text = "Date: \(self.tomorrow)"
             self.populationTodayNumberLabel.text = "Population : \(String(population.population))"
             self.populationTomorrowNumberLabel.text = "Population: \(String(population.population))"
             self.populationTodayLabel.text = "Population Today in \(self.searchCountry): "
             self.populationTomorrowLabel.text = "Population Tomorrow in \(self.searchCountry)"
-        }
+            */
+            self.populationNumber = String(population.population)
+            print(self.populationNumber)
+       }
     }
     
     func showError(_ error: Error) {
