@@ -183,20 +183,9 @@ final class PopulationViewController: UIViewController{
         viewModel.delegate = self
     }
     
-    private func fetchTodayInfo() {
-        viewModel.viewDidLoad(countryName: searchCountry, date: today)
-        todayDateLabel.text = "Date: \(today)"
-        populationTodayNumberLabel.text = "Population: \(populationNumber)"
-        print(populationNumber)
-        populationTodayLabel.text = "Population Today in \(searchCountry): "
-    }
-    
-    private func fetchTomorrowInfo() {
-        viewModel.viewDidLoad(countryName: searchCountry, date: tomorrow)
-        tomorrowDateLabel.text = "Date: \(tomorrow)"
-        populationTomorrowNumberLabel.text = "Population: \(populationNumber)"
-        print(populationNumber)
-        populationTomorrowLabel.text = "Population Tomorrow in \(searchCountry)"
+    private func fetchInfo() {
+        viewModel.viewTodayDidLoad(countryName: searchCountry)
+        viewModel.viewTomorrowDidLoad(countryName: searchCountry)
     }
     
     // MARK: - Actions
@@ -212,25 +201,26 @@ final class PopulationViewController: UIViewController{
 
 // MARK: - Exstensions
 extension PopulationViewController: PopulationViewModelDelegate {
+    func populationTomorrowFetched(_ population: TotalPopulation) {
+        DispatchQueue.main.async {
+            self.tomorrowDateLabel.text = "Date: \(self.tomorrow)"
+            self.populationTomorrowNumberLabel.text = "Population: \(String(population.population))"
+            self.populationTomorrowLabel.text = "Population Tomorrow in \(self.searchCountry)"
+        }
+    }
+    
     func suggestionFetched(_ countries: [String]) {
         self.suggestions = countries
         print(suggestions)
     }
     
-    func populationFetched(_ population: TotalPopulation) {
+    func populationTodayFetched(_ population: TotalPopulation) {
         DispatchQueue.main.async {
             //TODO: - Fix label information.
-            /*
             self.todayDateLabel.text = "Date: \(self.today)"
-            self.tomorrowDateLabel.text = "Date: \(self.tomorrow)"
             self.populationTodayNumberLabel.text = "Population : \(String(population.population))"
-            self.populationTomorrowNumberLabel.text = "Population: \(String(population.population))"
             self.populationTodayLabel.text = "Population Today in \(self.searchCountry): "
-            self.populationTomorrowLabel.text = "Population Tomorrow in \(self.searchCountry)"
-            */
-            self.populationNumber = String(population.population)
-            print(self.populationNumber)
-       }
+        }
     }
     
     func showError(_ error: Error) {
@@ -251,8 +241,7 @@ extension PopulationViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         tableView.isHidden = true
         searchCountry = searchBar.text ?? ""
-        fetchTodayInfo()
-        fetchTomorrowInfo()
+        fetchInfo()
     }
 }
 
