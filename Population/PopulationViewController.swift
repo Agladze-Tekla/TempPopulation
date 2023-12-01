@@ -13,7 +13,7 @@ final class PopulationViewController: UIViewController{
     private let mainStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 130
+        stack.spacing = 110
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -21,14 +21,14 @@ final class PopulationViewController: UIViewController{
     private let todayStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 60
+        stack.spacing = 50
         return stack
     }()
     
     private let tomorrowStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 60
+        stack.spacing = 50
         return stack
     }()
     
@@ -62,6 +62,22 @@ final class PopulationViewController: UIViewController{
     private let populationTomorrowNumberLabel: UILabel = {
         let label = UILabel()
         label.text = "Population Tomorrow:"
+        label.textAlignment = .center
+        label.font = .boldSystemFont(ofSize: 20)
+        label.textColor = .white
+        return label
+    }()
+    
+    private let todayDateLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.font = .boldSystemFont(ofSize: 20)
+        label.textColor = .white
+        return label
+    }()
+    
+    private let tomorrowDateLabel: UILabel = {
+        let label = UILabel()
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 20)
         label.textColor = .white
@@ -115,9 +131,19 @@ final class PopulationViewController: UIViewController{
         view.addSubview(mainStackView)
         mainStackView.addArrangedSubview(todayStackView)
         mainStackView.addArrangedSubview(tomorrowStackView)
+        addTodaySubviews()
+        addTomorrowSubviews()
+    }
+    
+    private func addTodaySubviews() {
         todayStackView.addArrangedSubview(populationTodayLabel)
+        todayStackView.addArrangedSubview(todayDateLabel)
         todayStackView.addArrangedSubview(populationTodayNumberLabel)
+    }
+    
+    private func addTomorrowSubviews() {
         tomorrowStackView.addArrangedSubview(populationTomorrowLabel)
+        tomorrowStackView.addArrangedSubview(tomorrowDateLabel)
         tomorrowStackView.addArrangedSubview(populationTomorrowNumberLabel)
     }
     
@@ -179,8 +205,11 @@ extension PopulationViewController: PopulationViewModelDelegate {
     
     func populationFetched(_ population: TotalPopulation) {
         DispatchQueue.main.async {
-            self.populationTodayNumberLabel.text = String(population.population)
-            self.populationTomorrowNumberLabel.text = String(population.population)
+            //TODO: - Fix label information.
+            self.todayDateLabel.text = "Date: \(self.today)"
+            self.tomorrowDateLabel.text = "Date: \(self.tomorrow)"
+            self.populationTodayNumberLabel.text = "Population : \((population.population))"
+            self.populationTomorrowNumberLabel.text = "Population: \(String(population.population))"
         }
     }
     
@@ -198,12 +227,10 @@ extension PopulationViewController: UISearchBarDelegate {
         }
     }
     
-    //TODO: - Fix the searchBarTextDidEndEditing function, it does not work.
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         tableView.isHidden = true
         searchCountry = searchBar.text ?? ""
-        print(searchCountry)
         fetchInfo()
         }
 }
@@ -223,5 +250,9 @@ extension PopulationViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return suggestions.count
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return 160
+        }
 }
 
