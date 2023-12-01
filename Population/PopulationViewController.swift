@@ -14,6 +14,7 @@ final class PopulationViewController: UIViewController{
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 110
+        stack.clipsToBounds = true
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -22,6 +23,12 @@ final class PopulationViewController: UIViewController{
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 50
+        stack.layer.cornerRadius = 17
+        stack.clipsToBounds = true
+        //stack.isLayoutMarginsRelativeArrangement = true
+        stack.layoutMargins = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
+        let color = UIColor(displayP3Red: 200/255, green: 206/255, blue: 250/255, alpha: 1)
+        stack.backgroundColor = color
         return stack
     }()
     
@@ -29,6 +36,12 @@ final class PopulationViewController: UIViewController{
         let stack = UIStackView()
         stack.axis = .vertical
         stack.spacing = 50
+        stack.layer.cornerRadius = 17
+        stack.clipsToBounds = true
+        //stack.isLayoutMarginsRelativeArrangement = true
+        stack.layoutMargins = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
+        let color = UIColor(displayP3Red: 200/255, green: 206/255, blue: 250/255, alpha: 1)
+        stack.backgroundColor = color
         return stack
     }()
     
@@ -117,18 +130,19 @@ final class PopulationViewController: UIViewController{
     private func setupView() {
         setupBackground()
         setupSearchController()
-        setupSearchTableView()
+        //setupSearchTableView()
         addSubviews()
         setupConstraints()
         viewModel.fetchSuggestions()
     }
     
     private func setupBackground() {
-        view.backgroundColor = .black
+        let color = UIColor(displayP3Red: 135/255, green: 206/255, blue: 250/255, alpha: 1)
+        view.backgroundColor = color
     }
     
     private func addSubviews() {
-        view.addSubview(tableView)
+        //view.addSubview(tableView)
         view.addSubview(mainStackView)
         mainStackView.addArrangedSubview(todayStackView)
         mainStackView.addArrangedSubview(tomorrowStackView)
@@ -153,7 +167,7 @@ final class PopulationViewController: UIViewController{
             mainStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             mainStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-        setupTableViewConstraints()
+        //setupTableViewConstraints()
     }
     
     private func setupTableViewConstraints() {
