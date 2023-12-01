@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "GenericNetworkLayer",
+        "repositoryURL": "https://github.com/luk407/GenericNetworkLayer.git",
+        "state": {
+          "branch": "main",
+          "revision": "94dd586eafb747c2d797d03351de49275dd30e72",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
