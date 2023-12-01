@@ -193,6 +193,7 @@ extension PopulationViewController: UISearchBarDelegate {
     //TODO: - Fix the searchBarTextDidEndEditing function, it does not work.
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+        tableView.isHidden = true
         searchCountry = searchBar.text ?? ""
         fetchInfo()
         }
