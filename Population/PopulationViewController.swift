@@ -120,6 +120,7 @@ final class PopulationViewController: UIViewController{
         setupSearchTableView()
         addSubviews()
         setupConstraints()
+        viewModel.fetchSuggestions()
     }
     
     private func setupBackground() {
@@ -200,7 +201,8 @@ final class PopulationViewController: UIViewController{
 // MARK: - Exstensions
 extension PopulationViewController: PopulationViewModelDelegate {
     func suggestionFetched(_ countries: [String]) {
-        suggestions = countries
+        self.suggestions = countries
+        print(suggestions)
     }
     
     func populationFetched(_ population: TotalPopulation) {
