@@ -95,7 +95,7 @@ final class PopulationViewController: UIViewController{
     private func setupView() {
         setupBackground()
         setupSearchController()
-        setupSearchTableView()
+        //setupSearchTableView()
         addSubviews()
         setupConstraints()
     }
@@ -105,7 +105,7 @@ final class PopulationViewController: UIViewController{
     }
     
     private func addSubviews() {
-        view.addSubview(tableView)
+        //view.addSubview(tableView)
         view.addSubview(mainStackView)
         mainStackView.addArrangedSubview(todayStackView)
         mainStackView.addArrangedSubview(tomorrowStackView)
@@ -120,7 +120,7 @@ final class PopulationViewController: UIViewController{
             mainStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             mainStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-        setupTableViewConstraints()
+        //setupTableViewConstraints()
     }
     
     private func setupTableViewConstraints() {
@@ -175,6 +175,8 @@ extension PopulationViewController: PopulationViewModelDelegate {
             //TODO: - Assign information to labels from API.
             //self.populationTodayNumberLabel.text =
             print("It's working")
+            print(population.description)
+            self.populationTodayLabel.text = population.description
         }
     }
     
