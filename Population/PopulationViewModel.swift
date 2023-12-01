@@ -9,7 +9,7 @@ import Foundation
 import GenericNetworkLayer
 
 protocol PopulationViewModelDelegate: AnyObject {
-    func populationFetched(_ population: [TotalPopulation])
+    func populationFetched(_ population: TotalPopulation)
     func suggestionFetched(_ countries: [String])
     func showError(_ error: Error)
 }
@@ -18,12 +18,12 @@ final class PopulationViewModel {
     
     weak var delegate: PopulationViewModelDelegate?
     
-    func viewDidLoad(countryName: String) {
-        fetchPopulation(countryName: countryName)
+    func viewDidLoad(countryName: String, date: String) {
+        fetchPopulationData(countryName: countryName, date: date)
     }
     
-    private func fetchPopulation(countryName: String) {
-        guard let url = URL(string: "https://d6wn6bmjj722w.population.io:443/1.0/population/\(countryName)/today-and-tomorrow/") else { return }
+    private func fetchPopulationData(countryName: String, date: String) {
+        guard let url = URL(string: "https://d6wn6bmjj722w.population.io:443/1.0/population/\(countryName)/\(date)/") else { return }
         
         NetworkManager().request(with: url) { [weak self] (result: Result<PopulationResponse, Error>) in
             switch result {

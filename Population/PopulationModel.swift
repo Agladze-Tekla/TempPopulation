@@ -14,7 +14,7 @@ struct CountryModel: Decodable {
 
 // MARK: - PopulationResultModel
 struct PopulationResponse: Decodable {
-    let totalPopulation: [TotalPopulation]
+    let totalPopulation: TotalPopulation
 
     enum CodingKeys: String, CodingKey {
         case totalPopulation = "total_population"

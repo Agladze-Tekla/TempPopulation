@@ -82,6 +82,14 @@ final class PopulationViewController: UIViewController{
     
     private var searchCountry = ""
     
+    private let today = "2023-12-01"
+    
+    private let tomorrow = "2023-12-02"
+    
+    private var todayPopulation = ""
+    
+    private var tomorrowPopulation = ""
+    
     //MARK: - ViewLifeCycle()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -149,7 +157,7 @@ final class PopulationViewController: UIViewController{
     }
     
     private func fetchInfo() {
-        viewModel.viewDidLoad(countryName: searchCountry)
+        viewModel.viewDidLoad(countryName: searchCountry, date: today)
     }
     
     // MARK: - Actions
@@ -169,13 +177,10 @@ extension PopulationViewController: PopulationViewModelDelegate {
         suggestions = countries
     }
     
-    func populationFetched(_ population: [TotalPopulation]) {
+    func populationFetched(_ population: TotalPopulation) {
         DispatchQueue.main.async {
-            //TODO: - Assign information to labels from API.
-            //self.populationTodayNumberLabel.text =
-            print("It's working")
-            print(population.description)
-            self.populationTodayLabel.text = population.description
+            self.populationTodayNumberLabel.text = String(population.population)
+            self.populationTomorrowNumberLabel.text = String(population.population)
         }
     }
     
