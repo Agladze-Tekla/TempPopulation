@@ -70,18 +70,25 @@ final class PopulationViewController: UIViewController{
     
     private let searchBar = UISearchBar()
     
-    private let tableView = UITableView()
+    private let tableView: UITableView = {
+        let table = UITableView()
+        table.translatesAutoresizingMaskIntoConstraints = false
+        return table
+    }()
 
     private let viewModel = PopulationViewModel()
     
     private var suggestions: [String] = []
+    
+    private var searchCountry = ""
     
     //MARK: - ViewLifeCycle()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupViewModelDelegate()
-        viewModel.viewDidLoad(countryName: "Brazil")
+        //TODO: - Remove this fetchInfo()
+        fetchInfo()
     }
     
     //MARK: - Private Methods
@@ -113,8 +120,10 @@ final class PopulationViewController: UIViewController{
             mainStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             mainStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        setupTableViewConstraints()
+    }
+    
+    private func setupTableViewConstraints() {
                 NSLayoutConstraint.activate([
                     tableView.topAnchor.constraint(equalTo: view.topAnchor),
                     tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -133,10 +142,15 @@ final class PopulationViewController: UIViewController{
     
     private func setupSearchTableView() {
         tableView.dataSource = self
+        tableView.delegate = self
     }
     
     private func setupViewModelDelegate() {
         viewModel.delegate = self
+    }
+    
+    private func fetchInfo() {
+        viewModel.viewDidLoad(countryName: "Brazil")//searchCountry)
     }
     
     // MARK: - Actions
@@ -158,6 +172,7 @@ extension PopulationViewController: PopulationViewModelDelegate {
     
     func populationFetched(_ population: [TotalPopulation]) {
         DispatchQueue.main.async {
+            //TODO: - Assign information to labels from API.
             //self.populationTodayNumberLabel.text =
             print("It's working")
         }
@@ -174,11 +189,17 @@ extension PopulationViewController: UISearchBarDelegate {
         suggestions = suggestions.filter { $0.lowercased().contains(searchText.lowercased()) }
         tableView.reloadData()
     }
+    
+    //TODO: - Fix the searchBarTextDidEndEditing function, it does not work.
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchCountry = searchBar.text ?? ""
+        fetchInfo()
+        }
 }
 
 // MARK: - UITableViewDataSource Extension
 
-extension PopulationViewController: UITableViewDataSource {
+extension PopulationViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
                 cell.textLabel?.text = suggestions[indexPath.row]
@@ -189,3 +210,4 @@ extension PopulationViewController: UITableViewDataSource {
         return suggestions.count
     }
 }
+
