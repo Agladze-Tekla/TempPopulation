@@ -87,15 +87,13 @@ final class PopulationViewController: UIViewController{
         super.viewDidLoad()
         setupView()
         setupViewModelDelegate()
-        //TODO: - Remove this fetchInfo()
-        fetchInfo()
     }
     
     //MARK: - Private Methods
     private func setupView() {
         setupBackground()
         setupSearchController()
-        //setupSearchTableView()
+        setupSearchTableView()
         addSubviews()
         setupConstraints()
     }
@@ -105,7 +103,7 @@ final class PopulationViewController: UIViewController{
     }
     
     private func addSubviews() {
-        //view.addSubview(tableView)
+        view.addSubview(tableView)
         view.addSubview(mainStackView)
         mainStackView.addArrangedSubview(todayStackView)
         mainStackView.addArrangedSubview(tomorrowStackView)
@@ -120,7 +118,7 @@ final class PopulationViewController: UIViewController{
             mainStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             mainStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-        //setupTableViewConstraints()
+        setupTableViewConstraints()
     }
     
     private func setupTableViewConstraints() {
@@ -193,14 +191,14 @@ extension PopulationViewController: UISearchBarDelegate {
     }
     
     //TODO: - Fix the searchBarTextDidEndEditing function, it does not work.
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
         searchCountry = searchBar.text ?? ""
         fetchInfo()
         }
 }
 
 // MARK: - UITableViewDataSource Extension
-
 extension PopulationViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
