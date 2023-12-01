@@ -149,7 +149,7 @@ final class PopulationViewController: UIViewController{
     }
     
     private func fetchInfo() {
-        viewModel.viewDidLoad(countryName: "Brazil")//searchCountry)
+        viewModel.viewDidLoad(countryName: searchCountry)
     }
     
     // MARK: - Actions
@@ -198,6 +198,7 @@ extension PopulationViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         tableView.isHidden = true
         searchCountry = searchBar.text ?? ""
+        print(searchCountry)
         fetchInfo()
         }
 }
