@@ -34,7 +34,8 @@ final class PopulationViewController: UIViewController{
     
     private let populationTodayLabel: UILabel = {
         let label = UILabel()
-        label.text = "Population Today:"
+        //label.text = "Population Today:"
+        label.numberOfLines = 3
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 24)
         label.textColor = .white
@@ -43,7 +44,8 @@ final class PopulationViewController: UIViewController{
     
     private let populationTomorrowLabel: UILabel = {
         let label = UILabel()
-        label.text = "Population Tomorrow:"
+        //label.text = "Population Tomorrow:"
+        label.numberOfLines = 3
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 24)
         label.textColor = .white
@@ -52,7 +54,6 @@ final class PopulationViewController: UIViewController{
     
     private let populationTodayNumberLabel: UILabel = {
         let label = UILabel()
-        label.text = "Population Tomorrow:"
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 20)
         label.textColor = .white
@@ -61,7 +62,6 @@ final class PopulationViewController: UIViewController{
     
     private let populationTomorrowNumberLabel: UILabel = {
         let label = UILabel()
-        label.text = "Population Tomorrow:"
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 20)
         label.textColor = .white
@@ -157,12 +157,12 @@ final class PopulationViewController: UIViewController{
     }
     
     private func setupTableViewConstraints() {
-                NSLayoutConstraint.activate([
-                    tableView.topAnchor.constraint(equalTo: view.topAnchor),
-                    tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                    tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                    tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                ])
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
     }
     
     private func setupSearchController() {
@@ -183,8 +183,12 @@ final class PopulationViewController: UIViewController{
         viewModel.delegate = self
     }
     
-    private func fetchInfo() {
+    private func fetchTodayInfo() {
         viewModel.viewDidLoad(countryName: searchCountry, date: today)
+    }
+    
+    private func fetchTomorrowInfo() {
+        viewModel.viewDidLoad(countryName: searchCountry, date: tomorrow)
     }
     
     // MARK: - Actions
@@ -210,8 +214,10 @@ extension PopulationViewController: PopulationViewModelDelegate {
             //TODO: - Fix label information.
             self.todayDateLabel.text = "Date: \(self.today)"
             self.tomorrowDateLabel.text = "Date: \(self.tomorrow)"
-            self.populationTodayNumberLabel.text = "Population : \((population.population))"
+            self.populationTodayNumberLabel.text = "Population : \(String(population.population))"
             self.populationTomorrowNumberLabel.text = "Population: \(String(population.population))"
+            self.populationTodayLabel.text = "Population Today in \(self.searchCountry): "
+            self.populationTomorrowLabel.text = "Population Tomorrow in \(self.searchCountry)"
         }
     }
     
@@ -233,8 +239,9 @@ extension PopulationViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         tableView.isHidden = true
         searchCountry = searchBar.text ?? ""
-        fetchInfo()
-        }
+        fetchTodayInfo()
+        fetchTomorrowInfo()
+    }
 }
 
 // MARK: - UITableViewDataSource Extension
